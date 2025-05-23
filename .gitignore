@@ -1,0 +1,30 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*env*/
+venv/
+.venv/
+env/
+ENV/
+
+# IDE / Editor
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Data files (be specific if you have data you DO want to track)
+*.csv
+*.xlsx
+data/ # if you have a large data folder
+
+# Notebooks - consider clearing large outputs before committing
+.ipynb_checkpoints/
+
+# Other common ignores
+.DS_Store
+build/
+dist/
+*.log
