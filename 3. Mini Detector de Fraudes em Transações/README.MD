@@ -1,19 +1,15 @@
-# Mini Detector de Fraudes em Transações (Credit Card Fraud Detection)
-
+Mini Detector de Fraudes em Transações (Credit Card Fraud Detection)
 Este projeto é uma submissão para um desafio universitário, focado na detecção de fraudes em transações de cartão de crédito utilizando técnicas de Machine Learning. Ele inclui um pipeline para processamento de dados, treinamento de modelo, avaliação e um sistema de gerenciamento de experimentos via interface de texto (TUI).
 
-## Descrição do Projeto
-
+Descrição do Projeto
 O objetivo principal é construir um classificador capaz de distinguir transações fraudulentas de transações legítimas. O projeto explora:
 
-- Carregamento e geração de dados (reais e sintéticos).
-- Engenharia de features para melhorar a performance do modelo.
-- Técnicas para lidar com datasets desbalanceados (SMOTE).
-- Treinamento e avaliação de um modelo `RandomForestClassifier`.
-- Uma interface de texto para configurar e executar experimentos, registrando os resultados.
-
-## Estrutura de Pastas
-```
+Carregamento e geração de dados (reais e sintéticos).
+Engenharia de features para melhorar a performance do modelo.
+Técnicas para lidar com datasets desbalanceados (SMOTE).
+Treinamento e avaliação de um modelo RandomForestClassifier.
+Uma interface de texto para configurar e executar experimentos, registrando os resultados.
+Estrutura de Pastas
 ├── data/ # Pasta para armazenar os datasets
 │ └── creditcard.csv # Dataset principal (exemplo)
 ├── notebooks/ # (Opcional) Para Jupyter Notebooks de análise/apresentação
@@ -25,76 +21,133 @@ O objetivo principal é construir um classificador capaz de distinguir transaç�
 ├── ui.py # Script para a interface de texto de gerenciamento de experimentos
 ├── fraud_detection_results.json # Banco de dados JSON para armazenar resultados dos experimentos
 └── README.md # Este arquivo
-```
-## Configuração (Setup)
+Configuração (Setup)
+Pré-requisitos
+Python 3.7+ (recomendado 3.8+)
+pip (gerenciador de pacotes Python)
+Ambiente Virtual
+Navegue até a pasta raiz deste projeto:
+cd "3. Mini Detector de Fraudes em Transações"
+Crie o ambiente virtual:
 
-### Pré-requisitos
+bash
+Copy
+Edit
+python -m venv venv_fraude
+Ative o ambiente virtual:
 
-- Python 3.7+ (recomendado 3.8+)
-- pip (gerenciador de pacotes Python)
+Windows (CMD/PowerShell)
 
-Passo 3: Ative o ambiente virtual
-A ativação é diferente dependendo do seu sistema operacional e terminal:
+bash
+Copy
+Edit
+.\venv_fraude\Scripts\activate
+macOS/Linux
 
-Para Windows (CMD/Prompt de Comando):
-Bash
-
-.\venv_fraude\Scripts\activate.bat
-Para Windows (PowerShell):
-Bash
-
-.\venv_fraude\Scripts\Activate.ps1
-(Se encontrar um erro de política de execução no PowerShell, pode ser necessário executar Set-ExecutionPolicy RemoteSigned -Scope CurrentUser uma vez.)
-Para macOS ou Linux (terminal bash/zsh), ou Git Bash no Windows:
-Bash
-
+bash
+Copy
+Edit
 source venv_fraude/bin/activate
-Após a ativação, você deverá ver (venv_fraude) no início do seu prompt do terminal.
+Você deverá ver (venv_fraude) no início do seu prompt do terminal.
 
 Instalando Dependências
-Com o ambiente virtual (venv_fraude) ativo, instale as bibliotecas Python necessárias.
+Se ainda não existir, gere o arquivo requirements.txt após instalar as bibliotecas necessárias:
 
-Passo 1: Crie o arquivo requirements.txt (se ainda não o fez)
-Se você já instalou os pacotes manualmente (pandas, numpy, scikit-learn, imbalanced-learn) enquanto o venv_fraude estava ativo, gere o arquivo de requisitos:
-
-Bash
-
+bash
+Copy
+Edit
 pip freeze > requirements.txt
-(Este comando lista todos os pacotes instalados no ambiente ativo e salva essa lista em requirements.txt.)
+Para instalar as dependências (se for rodar em outro ambiente):
 
-Passo 2: Instale as dependências usando o arquivo requirements.txt
-Se você está configurando o projeto em um novo local ou se outra pessoa precisa configurá-lo, e você tem o arquivo requirements.txt:
-
-Bash
-
+bash
+Copy
+Edit
 pip install -r requirements.txt
-Isso instalará todas as bibliotecas listadas no arquivo. As principais incluem: pandas, numpy, scikit-learn, imbalanced-learn.
+Principais bibliotecas utilizadas:
+
+pandas
+
+numpy
+
+scikit-learn
+
+imbalanced-learn
 
 Como Executar
-Certifique-se de que seu ambiente virtual (venv_fraude) está ativo antes de executar os scripts. Todos os comandos devem ser executados a partir da pasta raiz deste projeto (3. Mini Detector de Fraudes em Transações/).
+Certifique-se de que o ambiente virtual (venv_fraude) está ativo.
 
-1. Executando Experimentos via Interface de Texto (Recomendado)
-Esta é a forma principal de interagir com o projeto. Para iniciar a interface de texto:
-
-Bash
-
+1. Executar a Interface de Texto (Recomendado)
+bash
+Copy
+Edit
 python ui.py
 Siga as instruções no menu para:
 
-Executar um novo experimento (escolhendo tipo de dados, SMOTE, parâmetros do modelo, limiar de classificação).
-Visualizar resultados de experimentos anteriores salvos em fraud_detection_results.json.
-2. Executando o Pipeline Diretamente (para teste do detector.py)
-O script detector.py pode ser executado diretamente para um teste rápido do pipeline com configurações padrão (definidas dentro do seu bloco if __name__ == "__main__":).
+Executar um novo experimento (escolhendo tipo de dados, uso de SMOTE, parâmetros do modelo e limiar de classificação).
 
-Bash
+Visualizar resultados de experimentos anteriores, salvos em fraud_detection_results.json.
 
+2. Executar o Pipeline Diretamente
+Execute o pipeline com configurações padrão definidas dentro do detector.py:
+
+bash
+Copy
+Edit
 python detector.py
-3. Testando as Funções de Entrada de Dados (para teste do data_input.py)
-Para testar as funções de carregamento, geração de dados, engenharia de features e SMOTE de forma isolada, execute o script data_input.py diretamente:
+3. Testar as Funções de Processamento de Dados
+Para testar isoladamente as funções de carregamento, geração de dados e SMOTE:
 
-Bash
-
+bash
+Copy
+Edit
 python src/data_input.py
+Dados
+Este projeto utiliza o dataset "Credit Card Fraud Detection", disponível no Kaggle.
+
+O arquivo CSV (creditcard.csv) deve ser colocado na pasta data/.
+
+As colunas esperadas são: Time, V1 a V28, Amount e a coluna alvo Class (onde 1 indica fraude).
+
+Visão Geral dos Scripts
+ui.py
+Fornece uma interface de texto para o usuário.
+
+Permite configurar os parâmetros de cada execução.
+
+Chama o pipeline principal (detector.py).
+
+Salva os resultados em fraud_detection_results.json.
+
+Permite visualizar experimentos anteriores.
+
+detector.py
+Contém a função principal run_fraud_detection_pipeline_with_params().
+
+Executa o pipeline completo: carregamento, pré-processamento, divisão treino/teste, SMOTE (opcional), treinamento (RandomForestClassifier), avaliação e geração de métricas.
+
+src/data_input.py
+Módulo com funções auxiliares:
+
+load_csv_data: Carregamento de dados CSV.
+
+generate_synthetic_data_scratch: Geração de dados sintéticos.
+
+engineer_features_from_data: Engenharia de features.
+
+augment_data_smote: Aplicação de SMOTE para balanceamento.
+
+Experimentação
+Utilize o ui.py para testar diferentes combinações de parâmetros:
+
+Tipo de Dados: Real ou Sintético.
+
+SMOTE: Ativar ou não no conjunto de treino.
+
+Hiperparâmetros do Modelo: n_estimators, max_depth, min_samples_leaf, min_samples_split.
+
+Limiar de Classificação: Ajustar (padrão 0.5) para otimizar o equilíbrio entre precisão e recall.
+
+Os resultados, incluindo métricas como F1-score, precisão, recall e matriz de confusão, são salvos em fraud_detection_results.json.
 
 TODO / Melhorias Futuras
 ✅ Integrar GridSearchCV na ui.py para busca automática de hiperparâmetros.
@@ -104,4 +157,3 @@ TODO / Melhorias Futuras
 ✅ Implementar visualizações mais avançadas (curva ROC, importância das features).
 
 ✅ Expandir a engenharia de features com base na análise exploratória.
-
