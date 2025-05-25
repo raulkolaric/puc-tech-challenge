@@ -171,3 +171,79 @@ def run_fraud_detection_pipeline():
 # Este bloco garante que run_fraud_detection_pipeline() só é chamado quando o script é executado diretamente.
 if __name__ == "__main__":
     run_fraud_detection_pipeline()
+
+# DEBUG ! 
+
+# ... (todo o código das suas funções load_csv_data, generate_synthetic_data_scratch, 
+#      engineer_features_from_data, augment_data_smote DEVE ESTAR ACIMA DESTA LINHA) ...
+
+# --- Bloco para Testar este Módulo Diretamente (Opcional) ---
+if __name__ == '__main__':
+    print("\n--- Executando data_input.py diretamente para fins de teste ---")
+    print("="*60)
+
+    # --- Teste 1: Gerar dados sintéticos do zero ---
+    print("\n--- Teste 1: generate_synthetic_data_scratch ---")
+    X_sintetico, y_sintetico = generate_synthetic_data_scratch(
+        n_samples=100,          # Menor número de amostras para teste rápido
+        n_features=5,           # Menor número de features
+        class_weights=[0.8, 0.2], # Mais balanceado para facilitar a visualização do SMOTE depois
+        target_column_name='Alvo'
+    )
+    if X_sintetico is not None and y_sintetico is not None:
+        print("\nDados sintéticos gerados com sucesso:")
+        print("Primeiras 3 linhas de X_sintetico:\n", X_sintetico.head(3))
+        print("\nPrimeiras 3 linhas de y_sintetico:\n", y_sintetico.head(3))
+        print(f"\nDistribuição de y_sintetico:\n{y_sintetico.value_counts()}")
+    else:
+        print("Falha ao gerar dados sintéticos.")
+    print("="*30)
+
+    # --- Teste 2: Carregar dados de um CSV ---
+    print("\n--- Teste 2: load_csv_data ---")
+    # Ajuste este caminho se o seu 'data' folder estiver em um local diferente
+    # em relação a 'src/'. Este caminho '../data/' sobe um nível a partir de 'src/'
+    # e depois entra em 'data/'.
+    caminho_arquivo_csv_real = '../data/creditcard.csv' 
+    nome_coluna_alvo_real = 'Class'                    
+
+    X_real, y_real = load_csv_data(file_path=caminho_arquivo_csv_real, target_column_name=nome_coluna_alvo_real)
+    
+    if X_real is not None and y_real is not None:
+        print("\nDados reais carregados com sucesso:")
+        print("Primeiras 3 linhas de X_real:\n", X_real.head(3))
+        # ... (restante do bloco de teste como fornecido anteriormente, incluindo Teste 3 e Teste 4) ...
+        # --- Teste 3: Engenharia de features (usando os dados carregados) ---
+        print("\n--- Teste 3: engineer_features_from_data ---")
+        X_engenheirado = engineer_features_from_data(X_real)
+        if X_engenheirado is not None:
+            print("\nEngenharia de features concluída:")
+            print("Primeiras 3 linhas de X_engenheirado:\n", X_engenheirado.head(3))
+            if len(X_engenheirado.columns) > len(X_real.columns):
+                print("Novas features foram adicionadas com sucesso.")
+            else:
+                print("Nenhuma nova feature parece ter sido adicionada.")
+
+        # --- Teste 4: Aumento de dados com SMOTE ---
+        X_para_smote = X_engenheirado if X_engenheirado is not None else X_real
+        if IMBLEARN_AVAILABLE and X_para_smote is not None and y_real is not None:
+            print("\n--- Teste 4: augment_data_smote ---")
+            X_aumentado, y_aumentado = augment_data_smote(X_para_smote, y_real)
+            if X_aumentado is not None and y_aumentado is not None:
+                if X_aumentado.shape[0] > X_para_smote.shape[0]:
+                    print("\nSMOTE aplicado. Nova distribuição de y_aumentado:")
+                    print(y_aumentado.value_counts())
+                else:
+                    print("\nSMOTE não alterou significativamente os dados.")
+            else:
+                print("SMOTE não retornou dados válidos.")
+        elif not IMBLEARN_AVAILABLE:
+            print("\nSMOTE não testado: biblioteca imbalanced-learn não está disponível.")
+        else:
+            print("\nSMOTE não testado: dados de entrada (X ou y) não estavam prontos.")
+    else:
+        print("\nFalha ao carregar dados reais do CSV, pulando testes dependentes.")
+    print("="*30)
+
+    print("\n--- Testes em data_input.py concluídos ---")
+    print("="*60)
