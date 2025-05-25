@@ -22,6 +22,7 @@ data/ # if you have a large data folder
 
 # Notebooks - consider clearing large outputs before committing
 .ipynb_checkpoints/
+*.nbconvert.html  
 
 # Other common ignores
 .DS_Store
