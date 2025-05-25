@@ -12,7 +12,9 @@ from sklearn.datasets import make_classification
 # caminho_absoluto_csv = r'C:\Users\raulk\Desktop\code\puc-tech\Desafio PUCTECH\3. Mini Detector de Fraudes em Transações\data\creditcard.csv'
 # print(f"DEBUG: Tentando carregar com caminho absoluto: {caminho_absoluto_csv}") # Linha de depuração
 
-# nome_coluna_alvo_real = 'Class'                    
+# nome_coluna_alvo_real = 'Class'
+
+           
 
 try:
     from imblearn.over_sampling import SMOTE
@@ -152,81 +154,81 @@ def augment_data_smote(X_input_df, y_input_series, random_state=42):
         print(f"Erro durante o SMOTE: {e}. Retornando dados originais.")
         return X_input_df, y_input_series
 
-#debug
-# if __name__ == '__main__':
-#     print("\n--- Executando data_input.py diretamente para fins de teste ---")
-#     print("="*60)
+##debug
+if __name__ == '__main__':
+    print("\n--- Executando data_input.py diretamente para fins de teste ---")
+    print("="*60)
 
-#     # --- Teste 1: Gerar dados sintéticos do zero ---
-#     print("\n--- Teste 1: generate_synthetic_data_scratch ---")
-#     X_sintetico, y_sintetico = generate_synthetic_data_scratch(
-#         n_samples=100,
-#         n_features=5,
-#         n_informative=3, # Corrected from previous error
-#         class_weights=[0.8, 0.2],
-#         target_column_name='Alvo',
-#         random_state=42
-#     )
-#     if X_sintetico is not None and y_sintetico is not None:
-#         print("\nDados sintéticos gerados com sucesso:")
-#         print("Primeiras 3 linhas de X_sintetico:\n", X_sintetico.head(3))
-#         print("\nPrimeiras 3 linhas de y_sintetico:\n", y_sintetico.head(3))
-#         print(f"\nDistribuição de y_sintetico:\n{y_sintetico.value_counts()}")
-#     else:
-#         print("Falha ao gerar dados sintéticos.")
-#     print("="*30)
+    # --- Teste 1: Gerar dados sintéticos do zero ---
+    print("\n--- Teste 1: generate_synthetic_data_scratch ---")
+    X_sintetico, y_sintetico = generate_synthetic_data_scratch(
+        n_samples=100,
+        n_features=5,
+        n_informative=3, # Corrected from previous error
+        class_weights=[0.8, 0.2],
+        target_column_name='Alvo',
+        random_state=42
+    )
+    if X_sintetico is not None and y_sintetico is not None:
+        print("\nDados sintéticos gerados com sucesso:")
+        print("Primeiras 3 linhas de X_sintetico:\n", X_sintetico.head(3))
+        print("\nPrimeiras 3 linhas de y_sintetico:\n", y_sintetico.head(3))
+        print(f"\nDistribuição de y_sintetico:\n{y_sintetico.value_counts()}")
+    else:
+        print("Falha ao gerar dados sintéticos.")
+    print("="*30)
 
-#     # --- Teste 2: Carregar dados de um CSV ---
-#     print("\n--- Teste 2: load_csv_data ---")
+    # --- Teste 2: Carregar dados de um CSV ---
+    print("\n--- Teste 2: load_csv_data ---")
     
-#     # ***** USAR O CAMINHO ABSOLUTO QUE FUNCIONOU *****
-#     caminho_arquivo_csv_real = r'C:\Users\raulk\Desktop\code\puc-tech\Desafio PUCTECH\3. Mini Detector de Fraudes em Transações\data\creditcard.csv'
-#     nome_coluna_alvo_real = 'Class' # This is correct for creditcard.csv                   
+    # ***** USAR O CAMINHO ABSOLUTO QUE FUNCIONOU *****
+    caminho_arquivo_csv_real = r'C:\Users\raulk\Desktop\code\puc-tech\Desafio PUCTECH\3. Mini Detector de Fraudes em Transações\data\creditcard.csv'
+    nome_coluna_alvo_real = 'Class' # This is correct for creditcard.csv                   
 
-#     print(f"Teste 2: Tentando carregar com caminho: {caminho_arquivo_csv_real}")
-#     X_real, y_real = load_csv_data(file_path=caminho_arquivo_csv_real, target_column_name=nome_coluna_alvo_real)
+    print(f"Teste 2: Tentando carregar com caminho: {caminho_arquivo_csv_real}")
+    X_real, y_real = load_csv_data(file_path=caminho_arquivo_csv_real, target_column_name=nome_coluna_alvo_real)
     
-#     if X_real is not None and y_real is not None:
-#         print("\nDados reais carregados com sucesso (Teste 2):")
-#         print("Primeiras 3 linhas de X_real:\n", X_real.head(3))
-#         print(f"Shape de X_real: {X_real.shape}")
+    if X_real is not None and y_real is not None:
+        print("\nDados reais carregados com sucesso (Teste 2):")
+        print("Primeiras 3 linhas de X_real:\n", X_real.head(3))
+        print(f"Shape de X_real: {X_real.shape}")
 
-#         # --- Teste 3: Engenharia de features ---
-#         # (O restante dos Testes 3 e 4 como estavam antes, pois agora X_real deveria carregar)
-#         print("\n--- Teste 3: engineer_features_from_data ---")
-#         X_engenheirado = engineer_features_from_data(X_real)
-#         if X_engenheirado is not None:
-#             print("\nEngenharia de features concluída:")
-#             print("Primeiras 3 linhas de X_engenheirado:\n", X_engenheirado.head(3))
-#             if len(X_engenheirado.columns) > len(X_real.columns):
-#                 print("Novas features foram adicionadas com sucesso.")
-#             else:
-#                 print("Nenhuma nova feature parece ter sido adicionada (verifique a lógica em engineer_features_from_data e se as colunas base existem).")
+        # --- Teste 3: Engenharia de features ---
+        # (O restante dos Testes 3 e 4 como estavam antes, pois agora X_real deveria carregar)
+        print("\n--- Teste 3: engineer_features_from_data ---")
+        X_engenheirado = engineer_features_from_data(X_real)
+        if X_engenheirado is not None:
+            print("\nEngenharia de features concluída:")
+            print("Primeiras 3 linhas de X_engenheirado:\n", X_engenheirado.head(3))
+            if len(X_engenheirado.columns) > len(X_real.columns):
+                print("Novas features foram adicionadas com sucesso.")
+            else:
+                print("Nenhuma nova feature parece ter sido adicionada (verifique a lógica em engineer_features_from_data e se as colunas base existem).")
 
-#         # --- Teste 4: Aumento de dados com SMOTE ---
-#         X_para_smote = X_engenheirado if X_engenheirado is not None else X_real
-#         if IMBLEARN_AVAILABLE and X_para_smote is not None and y_real is not None: # y_real é o original aqui
-#             print("\n--- Teste 4: augment_data_smote ---")
-#             # Verifique se y_real é desbalanceado o suficiente para o SMOTE ser significativo
-#             if y_real.value_counts(normalize=True).min() < 0.4: # Exemplo: se a classe minoritária for < 40%
-#                 X_aumentado, y_aumentado = augment_data_smote(X_para_smote, y_real)
-#                 if X_aumentado is not None and y_aumentado is not None:
-#                     if X_aumentado.shape[0] > X_para_smote.shape[0]:
-#                         print("\nSMOTE aplicado. Nova distribuição de y_aumentado:")
-#                         print(y_aumentado.value_counts())
-#                     else:
-#                         print("\nSMOTE não alterou significativamente os dados (verifique a distribuição original de y_real e as condições dentro de augment_data_smote).")
-#                 else:
-#                     print("SMOTE não retornou dados válidos.")
-#             else:
-#                 print("\nSMOTE pulado: y_real não parece significativamente desbalanceado para este teste ou a classe minoritária tem poucas amostras.")
-#         elif not IMBLEARN_AVAILABLE:
-#             print("\nSMOTE não testado: biblioteca imbalanced-learn não está disponível.")
-#         else:
-#             print("\nSMOTE não testado: dados de entrada (X ou y) não estavam prontos.")
-#     else:
-#         print(f"\nFalha ao carregar dados reais do CSV para Teste 2 usando o caminho: {caminho_arquivo_csv_real}")
-#     print("="*30)
+        # --- Teste 4: Aumento de dados com SMOTE ---
+        X_para_smote = X_engenheirado if X_engenheirado is not None else X_real
+        if IMBLEARN_AVAILABLE and X_para_smote is not None and y_real is not None: # y_real é o original aqui
+            print("\n--- Teste 4: augment_data_smote ---")
+            # Verifique se y_real é desbalanceado o suficiente para o SMOTE ser significativo
+            if y_real.value_counts(normalize=True).min() < 0.4: # Exemplo: se a classe minoritária for < 40%
+                X_aumentado, y_aumentado = augment_data_smote(X_para_smote, y_real)
+                if X_aumentado is not None and y_aumentado is not None:
+                    if X_aumentado.shape[0] > X_para_smote.shape[0]:
+                        print("\nSMOTE aplicado. Nova distribuição de y_aumentado:")
+                        print(y_aumentado.value_counts())
+                    else:
+                        print("\nSMOTE não alterou significativamente os dados (verifique a distribuição original de y_real e as condições dentro de augment_data_smote).")
+                else:
+                    print("SMOTE não retornou dados válidos.")
+            else:
+                print("\nSMOTE pulado: y_real não parece significativamente desbalanceado para este teste ou a classe minoritária tem poucas amostras.")
+        elif not IMBLEARN_AVAILABLE:
+            print("\nSMOTE não testado: biblioteca imbalanced-learn não está disponível.")
+        else:
+            print("\nSMOTE não testado: dados de entrada (X ou y) não estavam prontos.")
+    else:
+        print(f"\nFalha ao carregar dados reais do CSV para Teste 2 usando o caminho: {caminho_arquivo_csv_real}")
+    print("="*30)
 
-#     print("\n--- Testes em data_input.py concluídos ---")
-#     print("="*60)
+    print("\n--- Testes em data_input.py concluídos ---")
+    print("="*60)

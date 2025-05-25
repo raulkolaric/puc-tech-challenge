@@ -1,5 +1,6 @@
 # detector.py
-# Main script for the fraud detection pipeline, now refactored to be callable.
+# Main script for the fraud detection pipeline, now refactored to be callable
+# and accept a classification threshold.
 
 import os
 import time
@@ -13,16 +14,16 @@ from src.data_input import (load_csv_data,
                             augment_data_smote)
 
 # Scikit-learn imports
-from sklearn.model_selection import train_test_split # GridSearchCV removed for this direct param run
+from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestClassifier
-from sklearn.metrics import classification_report, confusion_matrix, accuracy_score, f1_score, precision_score, recall_score
+from sklearn.metrics import classification_report, confusion_matrix, accuracy_score # Removed f1, precision, recall from here as they are in report_dict
 
 # This is the function that will be called by run_experiments.py
 def run_fraud_detection_pipeline_with_params(
     use_real_data=True,
     apply_smote_to_train=True,
     model_params_override=None,
-    run_grid_search=False # Kept for future, but TUI will pass specific params
+    classification_threshold=0.5 # New parameter with default
     ):
     """
     Executes the fraud detection pipeline with specified configurations
@@ -32,19 +33,19 @@ def run_fraud_detection_pipeline_with_params(
         use_real_data (bool): True to load real data, False for synthetic.
         apply_smote_to_train (bool): True to apply SMOTE to the training data.
         model_params_override (dict): Dictionary of parameters for RandomForestClassifier.
-                                      If None, uses internal defaults.
-        run_grid_search (bool): If True, would run GridSearchCV (not implemented in this TUI path).
+        classification_threshold (float): Threshold to use for converting probabilities to class predictions.
 
     Returns:
-        dict: A dictionary containing performance metrics, e.g.,
-              {'f1_class1': 0.83, 'precision_class1': 0.87, ...}
-              Returns None if the pipeline fails before evaluation.
+        dict: A dictionary containing performance metrics,
+              or None if the pipeline fails before evaluation.
     """
     print("\n--- Executando Pipeline de Detecção de Fraudes com Parâmetros ---")
-
+    # ... (Data loading and initial feature engineering logic - X_final, y_final obtained) ...
+    # This part is mostly the same as before, controlled by use_real_data
+    # and calls functions from src.data_input
     X_final, y_final = None, None
-
     if use_real_data:
+        # ... (code to load real data and engineer features) ...
         print("Opção de Dados: Carregando dados reais.")
         script_dir = os.path.dirname(os.path.abspath(__file__))
         file_path_real_data = os.path.join(script_dir, 'data', 'creditcard.csv')
@@ -61,40 +62,37 @@ def run_fraud_detection_pipeline_with_params(
                 print("Engenharia de features falhou.")
         else:
             print("Carregamento inicial dos dados falhou.")
-    else: # use_real_data is False
+    else: 
         print("Opção de Dados: Gerando dados sintéticos.")
         X_final, y_final = generate_synthetic_data_scratch(
-            n_samples=20000, # Default for TUI, can be made configurable
-            n_features=20,
-            class_weights=[0.99, 0.01],
-            random_state=42
+            n_samples=20000, n_features=20, class_weights=[0.99, 0.01], random_state=42
         )
         print("(Engenharia de features geralmente pulada para dados sintéticos genéricos)")
 
     if X_final is None or y_final is None:
         print("--- Falha ao obter os dados. Pipeline encerrado. ---")
         return None
+    # ... (Print X_final shape and y_final distribution) ...
 
-    print(f"Shape final de X antes do split: {X_final.shape}")
-    print(f"Distribuição final de y antes do split:\n{y_final.value_counts(normalize=True)}")
-
+    # ... (Data splitting logic - X_train, X_test, y_train, y_test obtained) ...
+    # This part is the same.
     print("\nDividindo os dados em conjuntos de treino e teste...")
     try:
         X_train, X_test, y_train, y_test = train_test_split(
-            X_final, y_final,
-            test_size=0.25,
-            random_state=42,
-            stratify=y_final
+            X_final, y_final, test_size=0.25, random_state=42, stratify=y_final
         )
         print("Dados divididos com sucesso.")
+        print(f"Distribuição do alvo no treino original:\n{y_train.value_counts(normalize=True)}")
     except Exception as e:
         print(f"Erro durante a divisão dos dados: {e}")
         return None
-
+        
     X_train_processed = X_train.copy()
     y_train_processed = y_train.copy()
 
     if apply_smote_to_train:
+        # ... (SMOTE application logic - X_train_processed, y_train_processed updated) ...
+        # This part is the same.
         print("Aplicando SMOTE ao conjunto de treino...")
         X_train_processed, y_train_processed = augment_data_smote(X_train, y_train, random_state=42)
         if X_train_processed.shape[0] > X_train.shape[0]:
@@ -103,28 +101,25 @@ def run_fraud_detection_pipeline_with_params(
     else:
         print("SMOTE não aplicado ao conjunto de treino.")
 
+
     # --- MODEL TRAINING ---
     # Use provided model_params_override or defaults
-    current_model_params = {
+    current_model_params = { # Basic defaults if nothing is passed
         'n_estimators': 100, 'random_state': 42, 'verbose': 0, 'n_jobs': -1
-    } # Basic defaults
-    if model_params_override:
+    } 
+    if model_params_override: # If parameters are passed from ui.py, update the defaults
         current_model_params.update(model_params_override)
     
-    # Adjust class_weight if not applying SMOTE and not overridden
+    # Adjust class_weight based on SMOTE application and if not already in overridden params
     if not apply_smote_to_train and 'class_weight' not in current_model_params:
         current_model_params['class_weight'] = 'balanced'
-        print("Usando class_weight='balanced' no modelo (SMOTE não aplicado ao treino e não especificado).")
-    elif 'class_weight' in current_model_params and current_model_params['class_weight'] is None and not apply_smote_to_train :
-        # If user explicitly set class_weight to None, but SMOTE is also off, they might want 'balanced'
-        print("Aviso: class_weight é None e SMOTE não foi aplicado. Considere 'balanced' para desbalanceamento.")
-    elif apply_smote_to_train and current_model_params.get('class_weight') == 'balanced':
-        print("Aviso: SMOTE foi aplicado, class_weight='balanced' pode ser redundante.")
+        print("Usando class_weight='balanced' no modelo.")
+    # ... (warnings about class_weight and SMOTE) ...
 
-
-    model = RandomForestClassifier(**current_model_params)
+    model = RandomForestClassifier(**current_model_params) # Unpack the chosen parameters
 
     print(f"\nTreinando RandomForestClassifier com parâmetros: {current_model_params}...")
+    # ... (model.fit() and timing logic - same as before) ...
     start_training_time = time.time()
     try:
         model.fit(X_train_processed, y_train_processed)
@@ -138,84 +133,84 @@ def run_fraud_detection_pipeline_with_params(
     # --- MODEL EVALUATION ---
     print("\nAvaliando o modelo no conjunto de teste...")
     try:
-        predictions = model.predict(X_test)
+        proba_predictions = model.predict_proba(X_test)[:, 1] # Get probabilities for class 1 (fraud)
+
+        # Apply the custom or default threshold
+        print(f"Utilizando limiar de classificação: {classification_threshold}")
+        predictions = (proba_predictions >= classification_threshold).astype(int) # Convert probas to 0/1 based on threshold
+
     except Exception as e:
         print(f"Erro durante a predição: {e}")
         return None
 
     print("\n--- Relatório de Classificação ---")
     try:
-        # Get full classification report as a dictionary
+        # Get full classification report as a dictionary to extract specific metrics
         report_dict = classification_report(y_test, predictions, zero_division=0, output_dict=True)
-        print(classification_report(y_test, predictions, zero_division=0)) # Print for user
+        print(classification_report(y_test, predictions, zero_division=0)) # Print human-readable report
     except Exception as e:
         print(f"Erro ao gerar relatório de classificação: {e}")
-        report_dict = {} # Empty dict on error
+        report_dict = {} # Return empty dict on error to avoid crash later
 
     cm = confusion_matrix(y_test, predictions)
     print("\n--- Matriz de Confusão ---")
     print(cm)
     
-    tn, fp, fn, tp = 0,0,0,0
+    tn, fp, fn, tp = 0,0,0,0 # Initialize
     try:
+        # Robust unpacking of confusion matrix
         if cm.size == 4: 
             tn, fp, fn, tp = cm.ravel()
         elif cm.size == 1 and len(np.unique(y_test)) == 1 : 
              if y_test.iloc[0] == 0: tn = cm[0,0]
              else: tp = cm[0,0]
-        # else: print("Aviso: Matriz de confusão com formato inesperado para desempacotamento detalhado.")
     except Exception: 
         print("Aviso: Não foi possível desempacotar totalmente a matriz de confusão.")
 
-    # Prepare metrics to return, focusing on Class 1 (Fraude)
+    # Prepare metrics to return to the caller (ui.py)
     metrics_to_return = {
-        "accuracy": report_dict.get("accuracy", 0),
-        "f1_class1": report_dict.get("1", {}).get("f1-score", 0),
-        "precision_class1": report_dict.get("1", {}).get("precision", 0),
-        "recall_class1": report_dict.get("1", {}).get("recall", 0),
-        "support_class1": report_dict.get("1", {}).get("support", 0),
-        "f1_class0": report_dict.get("0", {}).get("f1-score", 0),
-        "precision_class0": report_dict.get("0", {}).get("precision", 0),
-        "recall_class0": report_dict.get("0", {}).get("recall", 0),
-        "support_class0": report_dict.get("0", {}).get("support", 0),
-        "confusion_matrix_class1": { # Specific to class 1 (fraud) perspective
+        "accuracy": report_dict.get("accuracy", "N/A"), # Overall accuracy
+        "f1_class1": report_dict.get("1", {}).get("f1-score", "N/A"), # F1 for fraud
+        "precision_class1": report_dict.get("1", {}).get("precision", "N/A"), # Precision for fraud
+        "recall_class1": report_dict.get("1", {}).get("recall", "N/A"), # Recall for fraud
+        "support_class1": report_dict.get("1", {}).get("support", "N/A"),
+        "f1_class0": report_dict.get("0", {}).get("f1-score", "N/A"), # F1 for non-fraud
+        "precision_class0": report_dict.get("0", {}).get("precision", "N/A"),
+        "recall_class0": report_dict.get("0", {}).get("recall", "N/A"),
+        "support_class0": report_dict.get("0", {}).get("support", "N/A"),
+        "confusion_matrix_class1": { # Details for fraud class
             "tp": int(tp), # True Positives for fraud
             "fn": int(fn), # False Negatives for fraud (missed frauds)
             "fp": int(fp), # False Positives for fraud (non-frauds flagged as fraud)
-            "tn": int(tn)  # True Negatives for fraud (non-frauds correctly identified)
+            "tn": int(tn)  # True Negatives (non-frauds correctly identified as non-fraud from fraud's perspective)
         },
-        "training_duration_seconds": training_duration
+        "training_duration_seconds": training_duration,
+        "classification_threshold": classification_threshold # Also log the threshold used
     }
     
     print("\n--- Pipeline de Detecção de Fraudes Concluído (Execução Parametrizada) ---")
-    return metrics_to_return
+    return metrics_to_return # Return the dictionary of metrics
 
-# This block allows detector.py to still be run directly for testing,
-# using some default configurations.
+# This block allows detector.py to still be run directly for testing its own pipeline
 if __name__ == "__main__":
-    print("Executando detector.py diretamente (usando configurações padrão)...")
-    # Example of default parameters for direct run
-    default_model_params = {
-        'n_estimators': 100,
-        'max_depth': None,
-        'min_samples_split': 2,
-        'min_samples_leaf': 1,
-        'random_state': 42,
-        'verbose': 1, 
-        'n_jobs': -1
+    print("Executando detector.py diretamente (usando configurações padrão para teste)...")
+    default_model_params = { # Example default parameters for direct run
+        'n_estimators': 100, 'max_depth': None, 'min_samples_split': 2,
+        'min_samples_leaf': 1, 'random_state': 42, 'verbose': 0, 'n_jobs': -1 
     }
     results = run_fraud_detection_pipeline_with_params(
-        use_real_data=True,       # Mude para False para testar com dados sintéticos
-        apply_smote_to_train=True, # Mude para False se não quiser SMOTE
-        model_params_override=default_model_params
+        use_real_data=False, # Default to synthetic for quick direct test
+        apply_smote_to_train=True, 
+        model_params_override=default_model_params,
+        classification_threshold=0.5 # Default threshold for direct run
     )
-    if results:
+    if results: # If results were returned (no major error)
         print("\nResultados da execução direta de detector.py:")
+        # Loop through and print results nicely
         for key, value in results.items():
-            if isinstance(value, dict):
+            if isinstance(value, dict): # If it's the confusion_matrix_class1 dict
                 print(f"  {key}:")
                 for sub_key, sub_value in value.items():
                     print(f"    {sub_key}: {sub_value}")
-            else:
+            else: # For floats or other types
                 print(f"  {key}: {value if isinstance(value, int) else f'{value:.4f}'}")
-
