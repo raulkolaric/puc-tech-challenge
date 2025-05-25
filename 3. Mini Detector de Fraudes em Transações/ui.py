@@ -17,12 +17,12 @@ except ImportError:
 
 RESULTS_DB_FILE = "fraud_detection_results.json" # Salvo no mesmo diretório que ui.py
 DEFAULT_MODEL_PARAMS = {
-    'n_estimators': 100,
-    'max_depth': None,
-    'min_samples_split': 2,
-    'min_samples_leaf': 1,
+    'n_estimators': 150,
+    'max_depth': 30,
+    'min_samples_leaf': 1,    # Explicitly set to default, which is valid
+    'min_samples_split': 5,   # Explicitly set to default, which is valid
     'random_state': 42,
-    'verbose': 0, # Keep verbose low for TUI runs unless debugging detector.py directly
+    'verbose': 5,
     'n_jobs': -1
 }
 

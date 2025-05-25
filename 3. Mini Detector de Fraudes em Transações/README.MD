@@ -5,7 +5,7 @@
 
 Este projeto é uma submissão para um desafio universitário, focado na detecção de fraudes em transações de cartão de crédito utilizando técnicas de Machine Learning. Ele inclui um pipeline para processamento de dados, treinamento de modelo, avaliação e um sistema de gerenciamento de experimentos via interface de texto (TUI).
 ## TLDR (Importante)
-O melhor modelo atingido nesse projeto é classificado como "bom" com base na comunidade de Machine learning. Não consegui rodar um Grid do tamanho que eu queria, devido ao tempo. Aqui está a melhor "run" com um f1 de 0.83:
+O melhor modelo atingido nesse projeto é classificado como "bom" com base na comunidade de Machine learning. Não consegui rodar um Grid do tamanho que eu queria, devido ao tempo. Aqui está a melhor "run" com um f1 de 0.87:
 ```bash
 Experimento 2 (Realizado em: 2025-05-25 10:56:08)
   Configuração dos Dados: Real CSV Data
