@@ -1,28 +1,30 @@
 
-# Project Title
-
-A brief description of what this project does and who it's for
+# 3. Mini Detector de Fraudes em Transações
 
 # Mini Detector de Fraudes em Transações (Credit Card Fraud Detection)
 
 Este projeto é uma submissão para um desafio universitário, focado na detecção de fraudes em transações de cartão de crédito utilizando técnicas de Machine Learning. Ele inclui um pipeline para processamento de dados, treinamento de modelo, avaliação e um sistema de gerenciamento de experimentos via interface de texto (TUI).
+## TLDR (Importante)
+O melhor modelo atingido nesse projeto é classificado como "bom" com base na comunidade de Machine learning. Não consegui rodar um Grid do tamanho que eu queria, devido ao tempo. Aqui está a melhor "run" com um f1 de 0.83:
+```bash
+Experimento 2 (Realizado em: 2025-05-25 10:56:08)
+  Configuração dos Dados: Real CSV Data
+  SMOTE no Treino: SMOTE Applied to Train Set
+  Parâmetros do Modelo: {'n_estimators': 150, 'max_depth': None, 'min_samples_split': 2, 'min_samples_leaf': 1, 'random_state': 42, 'verbose': 0, 'n_jobs': -1}
+  Limiar de Classificação Usado: N/A
 
-## 📄 Descrição do Projeto
+  Métricas (Classe 1 - Fraude):
+    F1-Score:    0.8333
+    Precisão:    0.8547
+    Recall:      0.8130
+    Matriz de Confusão (Fraude): 
+    TP=100, FP=17, FN=23, TN=71062
+```
+Eu acho que daria para chegar ao (f1 0.9) com maior tempo de alteração dos parâmetros, porém devido a semana que foi dada essa atividade minhas obrigações não permitiram o aprofundamento maior no assunto.
 
-O objetivo principal é construir um classificador capaz de distinguir transações fraudulentas de transações legítimas. O projeto explora:
+Fiquei satisfeito com o score, outros treinamentos que eu fiz foram visando menor False Positives, porém o Recall ficava horroroso, por isso não incluí.
 
-- Carregamento e geração de dados (reais e sintéticos).
-- Engenharia de features para melhorar a performance do modelo.
-- Técnicas para lidar com datasets desbalanceados (SMOTE).
-- Treinamento e avaliação de um modelo `RandomForestClassifier`.
-- Uma interface de texto para configurar e executar experimentos, registrando os resultados.
-
-## 📁 Estrutura de Pastas
-
-# Mini Detector de Fraudes em Transações (Credit Card Fraud Detection)
-
-Este projeto é uma submissão para um desafio universitário, focado na detecção de fraudes em transações de cartão de crédito utilizando técnicas de Machine Learning. Ele inclui um pipeline para processamento de dados, treinamento de modelo, avaliação e um sistema de gerenciamento de experimentos via interface de texto (TUI).
-
+Embaixo vai uma descrição mais detalhada do projeto.
 ## 📄 Descrição do Projeto
 
 O objetivo principal é construir um classificador capaz de distinguir transações fraudulentas de transações legítimas. O projeto explora:
@@ -58,9 +60,10 @@ O objetivo principal é construir um classificador capaz de distinguir transaç�
 
 ### 🔧 Configuração do Ambiente Virtual
 
-1. Navegue até a pasta raiz deste projeto:
-
+Navegue até a pasta raiz deste projeto:
+```bash
 cd "3. Mini Detector de Fraudes em Transações"
+```
 Crie o ambiente virtual:
 ```bash
 python -m venv venv_fraude
@@ -100,7 +103,7 @@ scikit-learn
 
 imbalanced-learn
 ```
-## 🚀 Como Executar
+# 🚀 Como Executar
 Certifique-se de ativar seu ambiente virtual antes de executar qualquer comando.
 
 ### 1️⃣ Executar via Interface de Texto (Recomendado)
@@ -182,7 +185,7 @@ augment_data_smote()	Aplica SMOTE para balanceamento de classes.
 ```
 ## 🧪 Experimentando
 Use ui.py para testar diferentes configurações:
-
+```bash
 Tipo de Dados: Real ou Sintético.
 
 SMOTE: Aplicar ou não.
@@ -198,16 +201,16 @@ min_samples_leaf
 min_samples_split
 
 Limiar de Classificação: Ajustar o threshold (padrão 0.5) para melhorar o trade-off entre precisão e recall.
-
+```
 ### ✅ Os resultados são armazenados em fraud_detection_results.json com:
 
-Configurações usadas.
+-Configurações usadas.
 
-Métricas (F1-Score, Precisão, Recall da classe fraudulenta).
+-Métricas (F1-Score, Precisão, Recall da classe fraudulenta).
 
-Matriz de Confusão.
+-Matriz de Confusão.
 
-🚧 TODO / Melhorias Futuras
+## 🚧 TODO / Melhorias Futuras
 🔍 Integrar GridSearchCV na ui.py para busca automática de hiperparâmetros.
 
 🤖 Adicionar outros algoritmos de classificação além do RandomForest.
