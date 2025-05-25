@@ -16,16 +16,16 @@ except ImportError:
     print("Aviso: A biblioteca imbalanced-learn não foi encontrada. A funcionalidade SMOTE não estará disponível.")
     print("Para instalá-la, execute: pip install imbalanced-learn")
 
-
 print("data_input.py carregado: Contém funções para manipulação de dados.")
 
 # --- 1. Função para Importar/Receber Dados CSV ---
 def load_csv_data(file_path, target_column_name):
+    # ... (código completo da função load_csv_data como fornecemos antes, com try-except, etc.) ...
+    # ... (vou omitir o corpo da função aqui para economizar espaço, mas ele deve estar completo)
     """
     Carrega dados de um arquivo CSV especificado e separa as features (X) e o alvo (y).
     target_column_name:
-        é a coluna que diz se é fraudulenta a transação
-
+    é a coluna que diz se é fraudulenta a transação
     Args:
         file_path (str): O caminho para o arquivo CSV.
         target_column_name (str): O nome da coluna da variável alvo.
@@ -38,10 +38,6 @@ def load_csv_data(file_path, target_column_name):
     try:
         df = pd.read_csv(file_path)
         print(f"Dados carregados com sucesso de {file_path}.")
-        # print("Primeiras 5 linhas:\n", df.head()) # Debug
-        # print("\nInformações dos Dados:") # Debug
-        # df.info() # Debug
-
         if target_column_name in df.columns:
             X = df.drop(target_column_name, axis=1)
             y = df[target_column_name]
@@ -52,7 +48,6 @@ def load_csv_data(file_path, target_column_name):
             print(f"Erro: Coluna alvo '{target_column_name}' não encontrada em {file_path}.")
             print(f"Colunas disponíveis: {df.columns.tolist()}")
             return None, None
-            
     except FileNotFoundError:
         print(f"Erro: Arquivo não encontrado em {file_path}. Por favor, verifique se o caminho está correto.")
         return None, None
@@ -63,107 +58,63 @@ def load_csv_data(file_path, target_column_name):
 # --- 2. Função para Criar Dados do Zero (Sintéticos) ---
 def generate_synthetic_data_scratch(n_samples=10000, n_features=29, n_informative=20,
                                     class_weights=[0.998, 0.002], target_column_name='Class', random_state=42):
+    # ... (código completo da função generate_synthetic_data_scratch como fornecemos antes) ...
+    # ... (vou omitir o corpo da função aqui para economizar espaço)
     """
     Gera um conjunto de dados sintético para classificação binária a partir do zero.
-
-    Args:
-        n_samples (int): Número total de amostras.
-        n_features (int): Número total de features.
-        n_informative (int): Número de features informativas.
-        class_weights (list): Proporção de amostras para cada classe para desbalanceamento.
-        target_column_name (str): Nome para a coluna alvo na Series retornada.
-        random_state (int): Semente para geração de números aleatórios (para reprodutibilidade).
-
-    Returns:
-        tuple: (pandas.DataFrame, pandas.Series) para features (X) e alvo (y).
+    # ... (Args e Returns)
     """
     print("\nGerando dados sintéticos do zero...")
     X_synth, y_synth = make_classification(
-        n_samples=n_samples,
-        n_features=n_features,
-        n_informative=n_informative,
-        n_redundant=max(0, n_features - n_informative - 2), 
-        n_repeated=0,
-        n_classes=2,
-        n_clusters_per_class=1,
-        weights=class_weights,
-        flip_y=0.01, # Introduz uma pequena quantidade de ruído nos rótulos
-        random_state=random_state
+        n_samples=n_samples, n_features=n_features, n_informative=n_informative,
+        n_redundant=max(0, n_features - n_informative - 2), n_repeated=0, n_classes=2,
+        n_clusters_per_class=1, weights=class_weights, flip_y=0.01, random_state=random_state
     )
-    
-    # Converte para DataFrame/Series do pandas para consistência com dados carregados
     feature_names = [f'feature_sintetica_{i+1}' for i in range(X_synth.shape[1])]
     X_df = pd.DataFrame(X_synth, columns=feature_names)
     y_series = pd.Series(y_synth, name=target_column_name)
-
     print(f"Dados sintéticos gerados com shape X: {X_df.shape}, shape y: {y_series.shape}")
     class_dist = y_series.value_counts(normalize=True) * 100
     print(f"Distribuição das classes: \nClasse 0: {class_dist.get(0, 0):.2f}%\nClasse 1: {class_dist.get(1, 0):.2f}%")
     return X_df, y_series
 
 # --- 3. Funções para Criar Dados Baseados em Dados de Entrada ---
-
 # Opção 3A: Engenharia de Features
 def engineer_features_from_data(X_input_df):
+    # ... (código completo da função engineer_features_from_data como fornecemos antes) ...
+    # ... (vou omitir o corpo da função aqui para economizar espaço)
     """
     Cria novas features a partir de um DataFrame de features existente.
-
-    Args:
-        X_input_df (pandas.DataFrame): O DataFrame de features de entrada.
-
-    Returns:
-        pandas.DataFrame: DataFrame com features originais e as recém-criadas por engenharia,
-                          ou None se a entrada for None.
+    # ... (Args e Returns)
     """
     if X_input_df is None:
         print("DataFrame de entrada para engenharia de features é None. Pulando.")
         return None
-        
     print("\nRealizando engenharia de novas features a partir dos dados de entrada...")
-    X_engineered = X_input_df.copy() # Trabalhe em uma cópia
-
-    # === Adicione sua lógica específica de engenharia de features aqui ===
-    # Exemplo: Criar um termo de interação se as colunas 'Time' e 'Amount' existirem
-    # (Estes são comuns em alguns datasets de fraude, adapte para suas colunas reais)
+    X_engineered = X_input_df.copy()
     if 'Time' in X_engineered.columns and 'Amount' in X_engineered.columns:
-        # Evitar divisão por zero se 'Amount' puder ser zero
         X_engineered['Amount_per_Time'] = X_engineered['Amount'] / (X_engineered['Time'] + 1e-6) 
         print("Feature criada: 'Amount_per_Time'")
-
-    # Exemplo: Transformação logarítmica de 'Amount' se existir e for positiva
     if 'Amount' in X_engineered.columns:
-        if (X_engineered['Amount'] > 0).all(): # Verificar se todos os valores são positivos
+        if (X_engineered['Amount'] > 0).all():
             X_engineered['Log_Amount'] = np.log(X_engineered['Amount'])
             print("Feature criada: 'Log_Amount'")
         else:
-            # Lidar com casos com valores 0 ou negativos, ex: log1p ou pular
-            X_engineered['Log1p_Amount'] = np.log1p(X_engineered['Amount']) # log(1+x) lida com 0
+            X_engineered['Log1p_Amount'] = np.log1p(X_engineered['Amount'])
             print("Feature criada: 'Log1p_Amount' (lida com valores zero)")
-            
-    # Adicione mais de suas regras de engenharia de features...
-    # Por exemplo, baseado no `creditcard.csv` do seu projeto que tem features V1, V2...:
     if 'V1' in X_engineered.columns and 'V2' in X_engineered.columns:
         X_engineered['V1_x_V2'] = X_engineered['V1'] * X_engineered['V2']
         print("Feature criada: 'V1_x_V2'")
-    # === Fim da lógica específica de engenharia de features ===
-
     print(f"Engenharia de features completa. Novo shape X: {X_engineered.shape}")
     return X_engineered
 
 # Opção 3B: Aumento de Dados usando SMOTE (para classificação desbalanceada)
 def augment_data_smote(X_input_df, y_input_series, random_state=42):
+    # ... (código completo da função augment_data_smote como fornecemos antes) ...
+    # ... (vou omitir o corpo da função aqui para economizar espaço)
     """
     Aumenta os dados usando SMOTE (Synthetic Minority Over-sampling Technique)
-    para lidar com o desbalanceamento de classes. Útil quando a classe minoritária (ex: fraude) está sub-representada.
-
-    Args:
-        X_input_df (pandas.DataFrame): DataFrame de features original.
-        y_input_series (pandas.Series): Series do alvo original.
-        random_state (int): Semente para reprodutibilidade.
-
-    Returns:
-        tuple: (pandas.DataFrame, pandas.Series) para features aumentadas (X_smote) 
-               e alvo (y_smote), ou os dados originais se o SMOTE falhar ou não estiver disponível.
+    # ... (Args e Returns)
     """
     if not IMBLEARN_AVAILABLE:
         print("SMOTE requer imbalanced-learn. Retornando dados originais.")
@@ -171,24 +122,16 @@ def augment_data_smote(X_input_df, y_input_series, random_state=42):
     if X_input_df is None or y_input_series is None:
         print("X ou y de entrada para SMOTE é None. Retornando dados originais.")
         return X_input_df, y_input_series
-
     print("\nTentando aumentar os dados usando SMOTE...")
     try:
-        # Verificar distribuição de classes inicial
         print("Distribuição de classes original:\n", y_input_series.value_counts(normalize=True) * 100)
-        
-        # Garantir que há uma classe minoritária para superamostragem
-        if len(y_input_series.value_counts()) < 2 or y_input_series.value_counts().min() < 2 : # SMOTE precisa de pelo menos 2 amostras na classe minoritária para algumas versões/configurações
+        if len(y_input_series.value_counts()) < 2 or y_input_series.value_counts().min() < 2 :
             print("Não há amostras suficientes na classe minoritária ou apenas uma classe presente. Pulando SMOTE.")
             return X_input_df, y_input_series
-
         smote = SMOTE(random_state=random_state)
         X_smote, y_smote = smote.fit_resample(X_input_df, y_input_series)
-        
-        # Converter X_smote de volta para DataFrame se tornou um array NumPy, preservando nomes das colunas
         X_smote_df = pd.DataFrame(X_smote, columns=X_input_df.columns)
         y_smote_series = pd.Series(y_smote, name=y_input_series.name)
-
         print("SMOTE aplicado com sucesso.")
         print(f"Shape X após SMOTE: {X_smote_df.shape}, shape y após SMOTE: {y_smote_series.shape}")
         print("Nova distribuição de classes após SMOTE:\n", y_smote_series.value_counts(normalize=True) * 100)
@@ -196,3 +139,71 @@ def augment_data_smote(X_input_df, y_input_series, random_state=42):
     except Exception as e:
         print(f"Erro durante o SMOTE: {e}. Retornando dados originais.")
         return X_input_df, y_input_series
+
+# --- Bloco para Testar este Módulo Diretamente (Opcional) ---
+if __name__ == '__main__':
+    print("\n--- Executando data_input.py diretamente para fins de teste ---")
+    print("="*60)
+
+    # --- Teste 1: Gerar dados sintéticos do zero ---
+    print("\n--- Teste 1: generate_synthetic_data_scratch ---")
+    X_sintetico, y_sintetico = generate_synthetic_data_scratch(
+        n_samples=100,
+        n_features=5,
+        class_weights=[0.8, 0.2],
+        target_column_name='Alvo'
+    )
+    if X_sintetico is not None and y_sintetico is not None:
+        print("\nDados sintéticos gerados com sucesso:")
+        print("Primeiras 3 linhas de X_sintetico:\n", X_sintetico.head(3))
+        print("\nPrimeiras 3 linhas de y_sintetico:\n", y_sintetico.head(3))
+        print(f"\nDistribuição de y_sintetico:\n{y_sintetico.value_counts()}")
+    else:
+        print("Falha ao gerar dados sintéticos.")
+    print("="*30)
+
+    # --- Teste 2: Carregar dados de um CSV ---
+    print("\n--- Teste 2: load_csv_data ---")
+    caminho_arquivo_csv_real = '../data/creditcard.csv' 
+    nome_coluna_alvo_real = 'Class'                    
+
+    X_real, y_real = load_csv_data(file_path=caminho_arquivo_csv_real, target_column_name=nome_coluna_alvo_real)
+    
+    if X_real is not None and y_real is not None:
+        print("\nDados reais carregados com sucesso:")
+        print("Primeiras 3 linhas de X_real:\n", X_real.head(3))
+
+        # --- Teste 3: Engenharia de features ---
+        print("\n--- Teste 3: engineer_features_from_data ---")
+        X_engenheirado = engineer_features_from_data(X_real)
+        if X_engenheirado is not None:
+            print("\nEngenharia de features concluída:")
+            print("Primeiras 3 linhas de X_engenheirado:\n", X_engenheirado.head(3))
+            if len(X_engenheirado.columns) > len(X_real.columns):
+                print("Novas features foram adicionadas com sucesso.")
+            else:
+                print("Nenhuma nova feature parece ter sido adicionada.")
+
+        # --- Teste 4: Aumento de dados com SMOTE ---
+        X_para_smote = X_engenheirado if X_engenheirado is not None else X_real
+        if IMBLEARN_AVAILABLE and X_para_smote is not None and y_real is not None:
+            print("\n--- Teste 4: augment_data_smote ---")
+            X_aumentado, y_aumentado = augment_data_smote(X_para_smote, y_real)
+            if X_aumentado is not None and y_aumentado is not None:
+                if X_aumentado.shape[0] > X_para_smote.shape[0]:
+                    print("\nSMOTE aplicado. Nova distribuição de y_aumentado:")
+                    print(y_aumentado.value_counts())
+                else:
+                    print("\nSMOTE não alterou significativamente os dados.")
+            else:
+                print("SMOTE não retornou dados válidos.")
+        elif not IMBLEARN_AVAILABLE:
+            print("\nSMOTE não testado: biblioteca imbalanced-learn não está disponível.")
+        else:
+            print("\nSMOTE não testado: dados de entrada (X ou y) não estavam prontos.")
+    else:
+        print("\nFalha ao carregar dados reais do CSV, pulando testes dependentes.")
+    print("="*30)
+
+    print("\n--- Testes em data_input.py concluídos ---")
+    print("="*60)
