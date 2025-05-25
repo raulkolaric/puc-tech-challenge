@@ -108,9 +108,9 @@ def run_fraud_detection_pipeline():
     # --- MODEL TRAINING ---
     # RandomForestClassifier parameters
     model_params = {
-        'n_estimators': 115,
+        'n_estimators': 150,
         'random_state': 42,
-        # 'max_depth': 5,
+        'max_depth': 30,
         # 'min_samples_leaf': 2,
         'verbose': 1, # Set to 0 for no scikit-learn messages, 1 or 2 for more
         'n_jobs': -1   # Use all available CPU cores for training
