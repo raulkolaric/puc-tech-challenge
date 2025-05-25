@@ -13,7 +13,7 @@ O objetivo principal é construir um classificador capaz de distinguir transaç�
 - Uma interface de texto para configurar e executar experimentos, registrando os resultados.
 
 ## Estrutura de Pastas
-
+```
 ├── data/ # Pasta para armazenar os datasets
 │ └── creditcard.csv # Dataset principal (exemplo)
 ├── notebooks/ # (Opcional) Para Jupyter Notebooks de análise/apresentação
@@ -25,7 +25,7 @@ O objetivo principal é construir um classificador capaz de distinguir transaç�
 ├── ui.py # Script para a interface de texto de gerenciamento de experimentos
 ├── fraud_detection_results.json # Banco de dados JSON para armazenar resultados dos experimentos
 └── README.md # Este arquivo
-
+```
 ## Configuração (Setup)
 
 ### Pré-requisitos
