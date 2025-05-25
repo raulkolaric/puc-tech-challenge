@@ -28,3 +28,6 @@ data/ # if you have a large data folder
 build/
 dist/
 *.log
+
+#3. Mini detector de fraudes em transações"
+*.json
