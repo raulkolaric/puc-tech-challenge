@@ -58,7 +58,6 @@ Edit
 
 1. Navegue até a pasta raiz deste projeto:
 
-```bash
 cd "3. Mini Detector de Fraudes em Transações"
 Crie o ambiente virtual:
 
