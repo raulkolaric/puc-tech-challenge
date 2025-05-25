@@ -153,7 +153,6 @@ def augment_data_smote(X_input_df, y_input_series, random_state=42):
         return X_input_df, y_input_series
 
 #debug
-# --- Bloco para Testar este Módulo Diretamente (Opcional) ---
 # if __name__ == '__main__':
 #     print("\n--- Executando data_input.py diretamente para fins de teste ---")
 #     print("="*60)
