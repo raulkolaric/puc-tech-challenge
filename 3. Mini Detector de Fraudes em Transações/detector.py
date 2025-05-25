@@ -199,7 +199,7 @@ if __name__ == "__main__":
         'min_samples_leaf': 1, 'random_state': 42, 'verbose': 0, 'n_jobs': -1 
     }
     results = run_fraud_detection_pipeline_with_params(
-        use_real_data=False, # Default to synthetic for quick direct test
+        use_real_data=True, # Default to synthetic for quick direct test
         apply_smote_to_train=True, 
         model_params_override=default_model_params,
         classification_threshold=0.5 # Default threshold for direct run

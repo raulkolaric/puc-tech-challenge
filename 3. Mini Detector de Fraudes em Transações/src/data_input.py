@@ -14,8 +14,6 @@ from sklearn.datasets import make_classification
 
 # nome_coluna_alvo_real = 'Class'
 
-           
-
 try:
     from imblearn.over_sampling import SMOTE
     IMBLEARN_AVAILABLE = True
