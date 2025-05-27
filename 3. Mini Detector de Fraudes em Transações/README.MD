@@ -8,17 +8,25 @@ Este projeto é uma submissão para um desafio universitário, focado na detecç
 O melhor modelo atingido nesse projeto é classificado como "bom" com base na comunidade de Machine learning. Não consegui rodar um Grid do tamanho que eu queria, devido ao tempo. Aqui está a melhor "run" com um f1 de 0.87:
 ```bash
 Experimento 2 (Realizado em: 2025-05-25 10:56:08)
-  Configuração dos Dados: Real CSV Data
-  SMOTE no Treino: SMOTE Applied to Train Set
-  Parâmetros do Modelo: {'n_estimators': 150, 'max_depth': None, 'min_samples_split': 2, 'min_samples_leaf': 1, 'random_state': 42, 'verbose': 0, 'n_jobs': -1}
-  Limiar de Classificação Usado: N/A
+Treinando RandomForestClassifier com parâmetros: {'n_estimators': 150, 'max_depth': 30, 'min_samples_leaf': 1, 'min_samples_split': 5, 'random_state': 42, 'verbose': 0, 'n_jobs': -1}...
 
-  Métricas (Classe 1 - Fraude):
-    F1-Score:    0.8333
-    Precisão:    0.8547
-    Recall:      0.8130
-    Matriz de Confusão (Fraude): 
-    TP=100, FP=17, FN=23, TN=71062
+--- Relatório de Classificação ---
+              precision    recall  f1-score   support
+
+           0       1.00      1.00      1.00     71079
+           1       0.90      0.84      0.87       123
+
+    accuracy                           1.00     71202
+   macro avg       0.95      0.92      0.93     71202
+weighted avg       1.00      1.00      1.00     71202
+
+Detalhes da Matriz de Confusão:
+Verdadeiros Negativos (Não-Fraudes OK): 71068
+Falsos Positivos (Não-Fraudes -> Fraude): 11 <-- Erro Tipo I
+Falsos Negativos (Fraudes -> Não Fraude): 20 <-- Erro Tipo II (CRÍTICO para fraude)
+Verdadeiros Positivos (Fraudes OK): 103
+
+Acurácia Geral: 0.9996
 ```
 Eu acho que daria para chegar ao (f1 0.9) com maior tempo de alteração dos parâmetros, porém devido a semana que foi dada essa atividade minhas obrigações não permitiram o aprofundamento maior no assunto.
 
