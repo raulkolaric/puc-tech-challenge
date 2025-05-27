@@ -523,5 +523,9 @@ if __name__ == "__main__":
     med4 = Medicamento("Ibuprofeno 400mg", 8.75, False, True, 5, proximo_id_medicamento)
     estoque[proximo_id_medicamento] = med4
     proximo_id_medicamento += 1
+    
+    med5 = Medicamento("BOPKOF-D-GFDK-FD 1000mg", 8.75, False, True, 5, proximo_id_medicamento)
+    estoque[proximo_id_medicamento] = med4
+    proximo_id_medicamento += 1
 
     main()
