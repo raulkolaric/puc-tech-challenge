@@ -40,35 +40,39 @@ class Medicamento:  #Inicializa um novo objeto Medicamento.
         self.quantidade = quantidade    #quantidade (int). Pode ser 0.
         self.id = id    #Pra ser mais pratico botar 2 remedios iguais do mesmo preço, e listar eles
 #Funcções extras no final do código (main, menu, estoque_crítico)
-#Opção número 1
+# Opção número 1
 def listar_estoque():
     """
     Lista todos os medicamentos no estoque, numerados, com seus atributos
     formatados e espaçados.
     """
     print(f"\n{Cores.BOLD}{Cores.CIANO}--- LISTA COMPLETA DO ESTOQUE ---{Cores.RESET}\n")
-    if not estoque: 
+    if not estoque:
         print(f"{Cores.AMARELO}Estoque vazio. Não há medicamentos para listar.{Cores.RESET}")
         return
 
-    numero_item = 1     
-    for medicamento_obj in estoque.values(): 
-        nome_display = f"{Cores.AMARELO}{medicamento_obj.nome.upper()}{Cores.RESET}"
-        if medicamento_obj.quantidade <= LIMITE_ESTOQUE_CRITICO:
-            nome_display = f"{Cores.VERMELHO}{medicamento_obj.nome.upper()}      ESTOQUE CRÍTICO{Cores.RESET}"
-        
+    numero_item = 1
+    for medicamento_obj in estoque.values():
+        # LÓGICA MODIFICADA AQUI PARA O AVISO DE ESGOTADO/CRÍTICO
+        if medicamento_obj.quantidade == 0:
+            nome_display = f"{Cores.BOLD}{Cores.VERMELHO}{medicamento_obj.nome.upper()}       ESGOTADO{Cores.RESET}"
+        elif medicamento_obj.quantidade > 0 and medicamento_obj.quantidade <= LIMITE_ESTOQUE_CRITICO:
+            nome_display = f"{Cores.VERMELHO}{medicamento_obj.nome.upper()}       ESTOQUE CRÍTICO{Cores.RESET}"
+        else:
+            nome_display = f"{Cores.AMARELO}{medicamento_obj.nome.upper()}{Cores.RESET}"
+        # FIM DA LÓGICA MODIFICADA
+
         print(f"{numero_item}. {nome_display}")
-        print(f"       Preço: R${medicamento_obj.preco:.2f}")
+        print(f"      Preço: R${medicamento_obj.preco:.2f}") # Note: regular spaces for alignment
         cor_qtd_listar = Cores.VERMELHO if medicamento_obj.quantidade <= LIMITE_ESTOQUE_CRITICO else Cores.VERDE
-        print(f"       Quantidade: {cor_qtd_listar}{medicamento_obj.quantidade}{Cores.RESET}")
-        print(f"       Exige Receita: {'Sim' if medicamento_obj.receita else 'Não'}")
-        print(f"       É Genérico: {'Sim' if medicamento_obj.generico else 'Não'}")
-        print(f"       ID Único: {medicamento_obj.id}")
-        print(f"{Cores.CIANO}---------------------------------{Cores.RESET}") 
+        print(f"      Quantidade: {cor_qtd_listar}{medicamento_obj.quantidade}{Cores.RESET}") # Note: regular spaces for alignment
+        print(f"      Exige Receita: {'Sim' if medicamento_obj.receita else 'Não'}") # Note: regular spaces for alignment
+        print(f"      É Genérico: {'Sim' if medicamento_obj.generico else 'Não'}") # Note: regular spaces for alignment
+        print(f"      ID Único: {medicamento_obj.id}") # Note: regular spaces for alignment
+        print(f"{Cores.CIANO}---------------------------------{Cores.RESET}")
 
-        numero_item += 1 
+        numero_item += 1
     print(f"{Cores.BOLD}{Cores.CIANO}--- FIM DA LISTA DE ESTOQUE ---{Cores.RESET}")
-
 #Opção número 2
 def adicionar_medicamento():
     global proximo_id_medicamento
@@ -503,7 +507,7 @@ if __name__ == "__main__":
     estoque[proximo_id_medicamento] = med1
     proximo_id_medicamento += 1
 
-    med5 = Medicamento("Clonazepam 2mg", 32.00, True, False, 2, proximo_id_medicamento)
+    med5 = Medicamento("Clonazepam 2mg", 32.00, True, False, 0, proximo_id_medicamento)
     estoque[proximo_id_medicamento] = med5
     proximo_id_medicamento += 1
 
