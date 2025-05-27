@@ -73,6 +73,7 @@ def listar_estoque():
 
         numero_item += 1
     print(f"{Cores.BOLD}{Cores.CIANO}--- FIM DA LISTA DE ESTOQUE ---{Cores.RESET}")
+    
 #Opção número 2
 def adicionar_medicamento():
     global proximo_id_medicamento
