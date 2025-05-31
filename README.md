@@ -19,10 +19,6 @@ Este repositório agrega os projetos desenvolvidos como parte do desafio PUC-Tec
          - Formatos de conteúdo.
          - Satisfação com o curso, áreas de interesse, e mais.
    - **Tecnologias:** Python, Pandas, Matplotlib, Seaborn.
-   - **Como Executar:**
-      1. Abra o notebook (ex: `analise_preferencias_estudantes.ipynb`) em um ambiente Jupyter (Colab, VS Code, Jupyter Lab).
-      2. Certifique-se de que as bibliotecas `pandas`, `matplotlib`, e `seaborn` estão instaladas. Se necessário, instale-as (ex: `!pip install pandas matplotlib seaborn` em uma célula do Colab).
-      3. Execute as células do notebook em ordem sequencial.
 
 ### 2. Sistema de Gerenciamento de Estoque de Farmácia
    - **Descrição:** Uma aplicação de console em Python, apresentada e executável através de um Jupyter Notebook, para gerenciar o estoque de uma farmácia.
@@ -33,9 +29,6 @@ Este repositório agrega os projetos desenvolvidos como parte do desafio PUC-Tec
       - Interface de usuário via console com feedback colorido para melhor usabilidade.
       - IDs únicos para medicamentos e tratamento robusto de erros de entrada.
    - **Tecnologias:** Python (utilizando classes e funcionalidades padrão).
-   - **Como Executar:**
-      1. Abra o notebook (ex: `sistema_farmacia.ipynb`) em um ambiente Jupyter (Colab, VS Code, Jupyter Lab).
-      2. Execute as células do notebook em ordem sequencial. A última célula iniciará o menu interativo do sistema na área de saída da célula.
 
 ### 3. Mini Detector de Fraudes em Transações
    - **Descrição:** Um projeto de Machine Learning focado na detecção de fraudes em transações de cartão de crédito. Este projeto implementa um pipeline completo que abrange desde o carregamento e pré-processamento de dados (incluindo engenharia de features e tratamento de desbalanceamento com SMOTE), até o treinamento de um modelo `RandomForestClassifier`, avaliação de sua performance (alcançando F1-score de 0.87 nos melhores experimentos) e um sistema de gerenciamento de experimentos.
@@ -44,11 +37,8 @@ Este repositório agrega os projetos desenvolvidos como parte do desafio PUC-Tec
       - Interface de Texto (TUI) (`ui.py`) para configuração e execução de experimentos, com resultados salvos em `fraud_detection_results.json`.
       - Módulos dedicados para entrada de dados (`src/data_input.py`) e execução do pipeline principal (`detector.py`).
    - **Tecnologias:** Python, Pandas, NumPy, Scikit-learn, Imbalanced-learn.
-   - **Como Executar:**
-      1. Navegue até a pasta `3. Mini Detector de Fraudes em Transações/`.
-      2. Siga as instruções no `README.MD` específico desta pasta para configurar o ambiente virtual (`venv_fraude/`) e instalar as dependências listadas em `requirements.txt`.
-      3. Execute a interface de gerenciamento de experimentos com `python ui.py` (recomendado) ou o pipeline de detecção diretamente com `python detector.py`.
-
+   - **VER ARQUIVO CSV NECESSÁRIO** 
+   
 ---
 
 ## 🚀 Como Começar (Geral)
